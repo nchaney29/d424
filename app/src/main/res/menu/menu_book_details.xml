@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Save Book"
+        android:id="@+id/booksave"/>
+    <item android:title="Delete Book"
+        android:id="@+id/bookdelete"/>
+    <item android:title="Share Book Details"
+        android:id="@+id/bookshare"/>
+<!--    <item android:title="Notify me on start date"-->
+<!--        android:id="@+id/vacationnotify"/>-->
+<!--    <item android:title="Notify me on end date"-->
+<!--        android:id="@+id/vacationendnotify"/>-->
+
+</menu>
