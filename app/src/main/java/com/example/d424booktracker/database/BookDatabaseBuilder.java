@@ -6,13 +6,15 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.d424booktracker.dao.AudiobookDAO;
 import com.example.d424booktracker.dao.BookDAO;
+import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 
-@Database(entities = {Book.class}, version = 2, exportSchema = false)
+@Database(entities = {Book.class, Audiobook.class}, version = 5, exportSchema = false)
 public abstract class BookDatabaseBuilder extends RoomDatabase {
     public abstract BookDAO bookDAO();
-//    public abstract ExcursionDAO excursionDAO();
+    public abstract AudiobookDAO audiobookDAO();
     private static volatile BookDatabaseBuilder INSTANCE;
 
     static BookDatabaseBuilder getDatabase(final Context context){

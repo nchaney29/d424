@@ -11,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424booktracker.R;
 import com.example.d424booktracker.database.Repository;
+import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,13 +44,22 @@ public class BookList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         repository = new Repository(getApplication());
+
         List<Book> allBooks = repository.getmAllBooks();
-        final BookAdapter bookAdapter =new BookAdapter(this);
-        recyclerView.setAdapter(bookAdapter);
+        List<Audiobook> allAudiobooks = repository.getmAllAudiobooks();
+
+        final BookAdapter bookAdapter = new BookAdapter(this);
+        final AudiobookAdapter audiobookAdapter = new AudiobookAdapter(this);
+        final ConcatAdapter concatAdapter = new ConcatAdapter(bookAdapter, audiobookAdapter);
+
+        recyclerView.setAdapter(concatAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         bookAdapter.setBooks(allBooks);
+        audiobookAdapter.setAudiobooks(allAudiobooks);
 
         //fix back button
         if (getSupportActionBar() != null) {
@@ -67,11 +78,19 @@ public class BookList extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         List<Book> allBooks = repository.getmAllBooks();
+        List<Audiobook> allAudiobooks = repository.getmAllAudiobooks();
+
         RecyclerView recyclerview=findViewById(R.id.recyclerView);
-        final BookAdapter bookAdapter =new BookAdapter(this);
-        recyclerview.setAdapter(bookAdapter);
+
+
+        final BookAdapter bookAdapter = new BookAdapter(this);
+        final AudiobookAdapter audiobookAdapter = new AudiobookAdapter(this);
+        final ConcatAdapter concatAdapter = new ConcatAdapter(bookAdapter, audiobookAdapter);
+
+        recyclerview.setAdapter(concatAdapter);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         bookAdapter.setBooks(allBooks);
+        audiobookAdapter.setAudiobooks(allAudiobooks);
 
     }
 

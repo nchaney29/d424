@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.d424booktracker.R;
 import com.example.d424booktracker.database.Repository;
+import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,6 +32,7 @@ public class BookDetails extends AppCompatActivity {
     String author;
     String startDate;
     String endDate;
+    Double listeningSpeed;
     String myFormat = "MM/dd/yyyy";
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
     int bookID;
@@ -37,7 +41,9 @@ public class BookDetails extends AppCompatActivity {
     EditText editAuthor;
     EditText editStartDate;
     EditText editEndDate;
+    EditText editListeningSpeed;
     Repository repository;
+    CheckBox audioCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,24 +57,41 @@ public class BookDetails extends AppCompatActivity {
         });
 
 
+        CheckBox audioCheck = findViewById(R.id.audiobookcheck);
+
         editName = findViewById(R.id.titletext);
         editAuthor = findViewById(R.id.authortext);
         editStartDate = findViewById(R.id.startdatetext);
         editEndDate = findViewById(R.id.enddatetext);
+        editListeningSpeed = findViewById(R.id.listeningspeed);
 
         name = getIntent().getStringExtra("name");
         author = getIntent().getStringExtra("author");
         startDate = getIntent().getStringExtra("startdate");
         endDate = getIntent().getStringExtra("enddate");
         bookID = getIntent().getIntExtra("id", -1);
+        listeningSpeed = getIntent().getDoubleExtra("listeningspeed", 1.0);
 
 
         editName.setText(name);
         editAuthor.setText(author);
         editStartDate.setText(startDate);
         editEndDate.setText(endDate);
+        editListeningSpeed.setText(String.valueOf(listeningSpeed));
 
         repository = new Repository(getApplication());
+
+
+        //allows audiobook checkbox to open listening speed option
+        LinearLayout listeningSpeedOption = findViewById(R.id.speedcontainer);
+
+        audioCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                listeningSpeedOption.setVisibility(View.VISIBLE);
+            } else {
+                listeningSpeedOption.setVisibility(View.GONE);
+            }
+        });
 
         // excursion action button
 //        FloatingActionButton fab = findViewById(R.id.floatingActionButton2);
@@ -162,19 +185,36 @@ public class BookDetails extends AppCompatActivity {
                 return false;
             }
 
+            CheckBox audiobookCheckBox = findViewById(R.id.audiobookcheck);
 
-            if (bookID == -1) {
-                if (repository.getmAllBooks().isEmpty()) bookID = 1;
-                else
-                    bookID = repository.getmAllBooks().get(repository.getmAllBooks().size() - 1).getBookID() + 1;
-                book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
-                repository.insert(book);
-                this.finish();
-            } else {
-                book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
-                repository.update(book);
-                this.finish();
+            if (audiobookCheckBox != null && audiobookCheckBox.isChecked()){
+                Audiobook audiobook;
+                if (bookID == -1) {
+                    if (repository.getmAllAudiobooks().isEmpty()) bookID = 1;
+                    else
+                        bookID = repository.getmAllAudiobooks().get(repository.getmAllAudiobooks().size() - 1).getBookID() + 1;
+                    audiobook = new Audiobook(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
+                    repository.insert(audiobook);
+                    this.finish();
+                } else {
+                    audiobook = new Audiobook(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
+                    repository.update(audiobook);
+                    this.finish();
+                }
             }
+            else
+                if (bookID == -1) {
+                    if (repository.getmAllBooks().isEmpty()) bookID = 1;
+                    else
+                        bookID = repository.getmAllBooks().get(repository.getmAllBooks().size() - 1).getBookID() + 1;
+                    book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
+                    repository.insert(book);
+                    this.finish();
+                } else {
+                    book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
+                    repository.update(book);
+                    this.finish();
+                }
         }
         //deletes vacations
         if (item.getItemId() == R.id.bookdelete) {

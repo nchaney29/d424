@@ -2,7 +2,9 @@ package com.example.d424booktracker.database;
 
 import android.app.Application;
 
+import com.example.d424booktracker.dao.AudiobookDAO;
 import com.example.d424booktracker.dao.BookDAO;
+import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 
 
@@ -12,17 +14,18 @@ import java.util.concurrent.Executors;
 
 public class Repository {
     private BookDAO mBookDAO;
+    private AudiobookDAO mAudiobookDAO;
 
     private List<Book> mAllBooks;
-//    private List<Excursion> mAllExcursions;
+    private List<Audiobook> mAllAudiobooks;
 
     private static int NUMBER_OF_THREADS=4;
     static final ExecutorService databaseExecutor= Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public Repository(Application application){
         BookDatabaseBuilder db= BookDatabaseBuilder.getDatabase(application);
-//        mExcursionDAO=db.excursionDAO();
-        mBookDAO =db.bookDAO();
+        mAudiobookDAO = db.audiobookDAO();
+        mBookDAO = db.bookDAO();
     }
 
     public List<Book> getmAllBooks(){
@@ -39,19 +42,19 @@ public class Repository {
         return mAllBooks;
     }
 
-//    public List<Excursion>getmAllExcursions(){
-//        databaseExecutor.execute(()->{
-//            mAllExcursions=mExcursionDAO.getAllExcursions();
-//        });
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e){
-//            throw new RuntimeException(e);
-//        }
-//
-//        return mAllExcursions;
-//    }
+    public List<Audiobook> getmAllAudiobooks(){
+        databaseExecutor.execute(()->{
+            mAllAudiobooks = mAudiobookDAO.getAllAudiobooks();
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+
+        return mAllAudiobooks;
+    }
 //
 //    public List<Excursion>getAssociatedExcursions(int vacationID){
 //        databaseExecutor.execute(()->{
@@ -102,41 +105,41 @@ public class Repository {
 
     }
 
-//    public void insert(Excursion excursion){
-//        databaseExecutor.execute(()-> {
-//            mExcursionDAO.insert(excursion);
-//        });
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    public void delete(Excursion excursion){
-//        databaseExecutor.execute(()-> {
-//            mExcursionDAO.delete(excursion);
-//        });
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    public void update(Excursion excursion){
-//        databaseExecutor.execute(()-> {
-//            mExcursionDAO.update(excursion);
-//        });
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    public void insert(Audiobook audiobook){
+        databaseExecutor.execute(()-> {
+            mAudiobookDAO.insert(audiobook);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void delete(Audiobook audiobook){
+        databaseExecutor.execute(()-> {
+            mAudiobookDAO.delete(audiobook);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void update(Audiobook audiobook){
+        databaseExecutor.execute(()-> {
+            mAudiobookDAO.update(audiobook);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }

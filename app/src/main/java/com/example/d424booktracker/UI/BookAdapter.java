@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424booktracker.R;
@@ -30,11 +31,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         private final TextView bookItemView;
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
-            bookItemView =itemView.findViewById(R.id.textView);
+            bookItemView = itemView.findViewById(R.id.textView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position=getAbsoluteAdapterPosition();
+                    int position=getBindingAdapterPosition();
                     final Book current= mBooks.get(position);
                     Intent intent=new Intent(context, BookDetails.class);
                     intent.putExtra("id", current.getBookID());
@@ -78,6 +79,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public void setBooks(List<Book> book){
         mBooks = book;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 1; // Unique ID for books
     }
 
 
