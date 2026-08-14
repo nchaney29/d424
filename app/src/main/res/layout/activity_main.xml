@@ -25,10 +25,21 @@
         android:layout_height="91dp"
         android:layout_marginBottom="129dp"
         android:backgroundTint="#4CAF50"
-        android:text="Start"
+        android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="147dp"
+        android:layout_height="91dp"
+        android:layout_marginBottom="224dp"
+        android:backgroundTint="#4CAF50"
+        android:text="Login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

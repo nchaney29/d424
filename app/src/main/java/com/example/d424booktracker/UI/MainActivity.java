@@ -27,12 +27,22 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Button button=findViewById(R.id.button);
+        Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this, BookList.class);
+                Intent intent=new Intent(MainActivity.this, RegisterUser.class);
+                startActivity(intent);
+            }
+        });
+
+        Button button2 = findViewById(R.id.login);
+        button2.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, LoginUser.class);
                 startActivity(intent);
             }
         });

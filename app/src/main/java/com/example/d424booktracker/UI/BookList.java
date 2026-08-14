@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class BookList extends AppCompatActivity {
     private Repository repository;
+    int currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,10 @@ public class BookList extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+        SessionManager sessionManager = new SessionManager(BookList.this);
+
         FloatingActionButton fab=findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +54,11 @@ public class BookList extends AppCompatActivity {
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         repository = new Repository(getApplication());
 
-        List<Book> allBooks = repository.getmAllBooks();
-        List<Audiobook> allAudiobooks = repository.getmAllAudiobooks();
+        currentUserID = sessionManager.getCurrentId();
+        System.out.println("Book List ID: " + currentUserID);
+
+        List<Book> allBooks = repository.getmBooksForUser(currentUserID);
+        List<Audiobook> allAudiobooks = repository.getmAudiobooksForUser(currentUserID);
 
         final BookAdapter bookAdapter = new BookAdapter(this);
         final AudiobookAdapter audiobookAdapter = new AudiobookAdapter(this);
@@ -77,8 +86,8 @@ public class BookList extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<Book> allBooks = repository.getmAllBooks();
-        List<Audiobook> allAudiobooks = repository.getmAllAudiobooks();
+        List<Book> allBooks = repository.getmBooksForUser(currentUserID);
+        List<Audiobook> allAudiobooks = repository.getmAudiobooksForUser(currentUserID);
 
         RecyclerView recyclerview=findViewById(R.id.recyclerView);
 

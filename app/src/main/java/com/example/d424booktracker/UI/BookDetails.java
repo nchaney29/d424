@@ -36,14 +36,15 @@ public class BookDetails extends AppCompatActivity {
     String myFormat = "MM/dd/yyyy";
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
     int bookID;
+    int userID;
     Book currentBook;
+    Audiobook currentAB;
     EditText editName;
     EditText editAuthor;
     EditText editStartDate;
     EditText editEndDate;
     EditText editListeningSpeed;
     Repository repository;
-    CheckBox audioCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class BookDetails extends AppCompatActivity {
 
 
         CheckBox audioCheck = findViewById(R.id.audiobookcheck);
+        SessionManager sessionManager = new SessionManager(BookDetails.this);
 
         editName = findViewById(R.id.titletext);
         editAuthor = findViewById(R.id.authortext);
@@ -70,7 +72,9 @@ public class BookDetails extends AppCompatActivity {
         startDate = getIntent().getStringExtra("startdate");
         endDate = getIntent().getStringExtra("enddate");
         bookID = getIntent().getIntExtra("id", -1);
-        listeningSpeed = getIntent().getDoubleExtra("listeningspeed", 1.0);
+        listeningSpeed = getIntent().getDoubleExtra("listeningspeed", 0);
+        userID = sessionManager.getCurrentId();
+        System.out.println("UserID: " + userID);
 
 
         editName.setText(name);
@@ -93,53 +97,15 @@ public class BookDetails extends AppCompatActivity {
             }
         });
 
-        // excursion action button
-//        FloatingActionButton fab = findViewById(R.id.floatingActionButton2);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(BookDetails.this, ExcursionDetails.class);
-//                Intent intent = new Intent(BookDetails.this);
-//                intent.putExtra("id", bookID);
-//                intent.putExtra("startdate", startDate);
-//                intent.putExtra("enddate", endDate);
-//                startActivity(intent);
-//            }
-//        });
-
-
-        //for excursion list
-//        RecyclerView recyclerView = findViewById(R.id.excursionrecyclerview);
-//
-//        repository = new Repository(getApplication());
-//        final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
-//        recyclerView.setAdapter(excursionAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        List<Excursion> filteredExcursions = new ArrayList<>();
-//        for (Excursion e : repository.getmAllExcursions()) {
-//            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
-//        }
-////        excursionAdapter.setExcursions(repository.getmAllExcursions());
-//        excursionAdapter.setExcursions(filteredExcursions);
+        if (listeningSpeed != 0) {
+            audioCheck.setChecked(true);
+        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
-//for excursion list
-//        final ExcursionAdapter excursionAdapter = new ExcursionAdapter(this);
-//        RecyclerView recyclerView = findViewById(R.id.excursionrecyclerview);
-//        recyclerView.setAdapter(excursionAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        List<Excursion> filteredExcursions = new ArrayList<>();
-//        for (Excursion e : repository.getmAllExcursions()) {
-//            if (e.getVacationID() == vacationID) filteredExcursions.add(e);
-//        }
-////        excursionAdapter.setExcursions(repository.getmAllExcursions());
-//        excursionAdapter.setExcursions(filteredExcursions);
 
     }
 
@@ -193,11 +159,11 @@ public class BookDetails extends AppCompatActivity {
                     if (repository.getmAllAudiobooks().isEmpty()) bookID = 1;
                     else
                         bookID = repository.getmAllAudiobooks().get(repository.getmAllAudiobooks().size() - 1).getBookID() + 1;
-                    audiobook = new Audiobook(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
+                    audiobook = new Audiobook(bookID, userID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
                     repository.insert(audiobook);
                     this.finish();
                 } else {
-                    audiobook = new Audiobook(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
+                    audiobook = new Audiobook(bookID, userID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString(), Double.parseDouble(editListeningSpeed.getText().toString()));
                     repository.update(audiobook);
                     this.finish();
                 }
@@ -207,42 +173,40 @@ public class BookDetails extends AppCompatActivity {
                     if (repository.getmAllBooks().isEmpty()) bookID = 1;
                     else
                         bookID = repository.getmAllBooks().get(repository.getmAllBooks().size() - 1).getBookID() + 1;
-                    book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
+                    book = new Book(bookID, userID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
                     repository.insert(book);
                     this.finish();
                 } else {
-                    book = new Book(bookID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
+                    book = new Book(bookID, userID, editName.getText().toString(), editEndDate.getText().toString(), editStartDate.getText().toString(), editAuthor.getText().toString());
                     repository.update(book);
                     this.finish();
                 }
         }
-        //deletes vacations
+        //deletes books
         if (item.getItemId() == R.id.bookdelete) {
-            for (Book book : repository.getmAllBooks()) {
-                if (book.getBookID() == bookID)
-                    currentBook = book;
+
+
+            CheckBox audiobookCheckBox = findViewById(R.id.audiobookcheck);
+
+            if (audiobookCheckBox != null && audiobookCheckBox.isChecked()) {
+                for (Audiobook audiobook : repository.getmAllAudiobooks()) {
+                    if (audiobook.getBookID() == bookID)
+                        currentAB = audiobook;
+                }
+                repository.abDelete(currentAB);
+                Toast.makeText(BookDetails.this, currentAB.getBookName() + " was deleted", Toast.LENGTH_LONG).show();
+                BookDetails.this.finish();
+            } else {
+
+                for (Book book : repository.getmAllBooks()) {
+                    if (book.getBookID() == bookID)
+                        currentBook = book;
+                }
+
+                repository.delete(currentBook);
+                Toast.makeText(BookDetails.this, currentBook.getBookName() + " was deleted", Toast.LENGTH_LONG).show();
+                BookDetails.this.finish();
             }
-
-//            numExcursion = 0;
-//            for (Excursion excursion : repository.getmAllExcursions()) {
-//                if (excursion.getVacationID() == vacationID)
-//                    ++numExcursion;
-//            }
-
-//            if (currentBook != null) {
-//                if (numExcursion == 0) {
-//                    repository.delete(currentBook);
-//                    Toast.makeText(BookDetails.this, currentBook.getBookName() + " was deleted", Toast.LENGTH_LONG).show();
-//                    BookDetails.this.finish();
-//                } else {
-//                    Toast.makeText(BookDetails.this, "Can't delete a vacation with excursions", Toast.LENGTH_LONG).show();
-//
-//                }
-//            }
-
-            repository.delete(currentBook);
-            Toast.makeText(BookDetails.this, currentBook.getBookName() + " was deleted", Toast.LENGTH_LONG).show();
-            BookDetails.this.finish();
         }
 
 //sets start date notification

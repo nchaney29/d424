@@ -42,6 +42,18 @@
             android:label="Book Details"
             android:parentActivityName=".UI.BookList"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".UI.RegisterUser"
+            android:exported="false"
+            android:label="User Registration"
+            android:parentActivityName=".UI.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".UI.LoginUser"
+            android:exported="false"
+            android:label="User Login"
+            android:parentActivityName=".UI.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
 <!--        <activity-->
 <!--            android:name=".UI.ExcursionDetails"-->
 <!--            android:label="Excursion Details"-->

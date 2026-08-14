@@ -24,4 +24,7 @@ public interface AudiobookDAO {
 
     @Query("SELECT * FROM audiobooks ORDER BY bookID ASC")
     List<Audiobook> getAllAudiobooks();
+
+    @Query("SELECT * FROM audiobooks WHERE userID = :currentUserId")
+    List<Audiobook> getAudiobooksForUser(int currentUserId);
 }
