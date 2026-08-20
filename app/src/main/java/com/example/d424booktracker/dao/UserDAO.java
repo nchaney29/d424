@@ -4,6 +4,9 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.d424booktracker.entities.Audiobook;
+import com.example.d424booktracker.entities.Book;
+import com.example.d424booktracker.entities.CombineSearch;
 import com.example.d424booktracker.entities.User;
 
 import java.sql.SQLException;
@@ -28,4 +31,14 @@ public interface UserDAO {
 
     @Query("SELECT * FROM users WHERE password = :password LIMIT 1")
     User findPassword(String password);
+
+    //search implementation
+    @Query("SELECT bookName AS title, author AS author, bookID AS bookID, 'book' AS bookType FROM books WHERE title LIKE :searchQuery AND userId = :currentUserId " + "UNION " + "SELECT bookName AS title, author AS author, bookID AS bookID, 'audiobook' as bookType FROM audiobooks WHERE title LIKE :searchQuery AND userId = :currentUserId")
+    List<CombineSearch> searchBooks(String searchQuery, int currentUserId);
+
+    @Query("SELECT * FROM books WHERE bookName = :title AND bookID = :bookID AND userId = :currentUserId")
+    Book bookLookup(String title, int bookID, int currentUserId);
+
+    @Query("SELECT * FROM audiobooks WHERE bookName = :title AND bookID = :bookID AND userId = :currentUserId")
+    Audiobook audiobookLookup(String title, int bookID, int currentUserId);
 }

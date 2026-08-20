@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424booktracker.R;
 import com.example.d424booktracker.entities.Audiobook;
-import com.example.d424booktracker.entities.Book;
 
 import java.util.List;
 

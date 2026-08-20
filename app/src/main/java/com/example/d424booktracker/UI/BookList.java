@@ -51,6 +51,15 @@ public class BookList extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fab2 = findViewById(R.id.toSearchPage);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(BookList.this, SearchPage.class);
+                startActivity(intent);
+            }
+        });
+
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         repository = new Repository(getApplication());
 
