@@ -7,6 +7,7 @@ import androidx.room.Query;
 import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 import com.example.d424booktracker.entities.CombineSearch;
+import com.example.d424booktracker.entities.ReportItem;
 import com.example.d424booktracker.entities.User;
 
 import java.sql.SQLException;
@@ -41,4 +42,8 @@ public interface UserDAO {
 
     @Query("SELECT * FROM audiobooks WHERE bookName = :title AND bookID = :bookID AND userId = :currentUserId")
     Audiobook audiobookLookup(String title, int bookID, int currentUserId);
+
+    //for report generation
+    @Query("SELECT bookName AS title, author AS author, startDate AS startDate, endDate AS endDate FROM books WHERE userId = :currentUserId " + "UNION " + "SELECT bookName AS title, author AS author, startDate AS startDate, endDate AS endDate FROM audiobooks WHERE userId = :currentUserId")
+    List<ReportItem> reportGenerate(int currentUserId);
 }

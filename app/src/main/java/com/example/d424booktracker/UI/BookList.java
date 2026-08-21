@@ -64,7 +64,8 @@ public class BookList extends AppCompatActivity {
         repository = new Repository(getApplication());
 
         currentUserID = sessionManager.getCurrentId();
-        System.out.println("Book List ID: " + currentUserID);
+//        displays user ID retrieved from session manager (for debug only)
+//        System.out.println("Book List ID: " + currentUserID);
 
         List<Book> allBooks = repository.getmBooksForUser(currentUserID);
         List<Audiobook> allAudiobooks = repository.getmAudiobooksForUser(currentUserID);
@@ -126,6 +127,11 @@ public class BookList extends AppCompatActivity {
         }*/
         if(item.getItemId()==android.R.id.home){
             getOnBackPressedDispatcher().onBackPressed();
+            return true;
+        }
+        if(item.getItemId()==R.id.report){
+            Intent intent = new Intent(BookList.this, ReportPage.class);
+            startActivity(intent);
             return true;
         }
 

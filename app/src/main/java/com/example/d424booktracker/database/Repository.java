@@ -12,6 +12,7 @@ import com.example.d424booktracker.dao.UserDAO;
 import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 import com.example.d424booktracker.entities.CombineSearch;
+import com.example.d424booktracker.entities.ReportItem;
 import com.example.d424booktracker.entities.User;
 
 
@@ -37,6 +38,7 @@ public class Repository {
     private boolean result;
     int userId;
     private List<CombineSearch> results;
+    private List<ReportItem> reportList;
     private Book foundBook;
     private Audiobook foundAudiobook;
 
@@ -294,5 +296,19 @@ public class Repository {
         }
 
         return foundAudiobook;
+    }
+
+    public List<ReportItem> generateReport(int userID) {
+        databaseExecutor.execute(() -> {
+            reportList = mUserDAO.reportGenerate(userID);
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return reportList;
     }
 }

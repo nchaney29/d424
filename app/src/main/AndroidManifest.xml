@@ -60,12 +60,12 @@
             android:label="Search"
             android:parentActivityName=".UI.BookList"
             android:windowSoftInputMode="adjustResize" />
-<!--        <activity-->
-<!--            android:name=".UI.ExcursionDetails"-->
-<!--            android:label="Excursion Details"-->
-<!--            android:parentActivityName=".UI.BookDetails"-->
-<!--            android:exported="false"-->
-<!--            android:windowSoftInputMode="adjustResize" />-->
+        <activity
+            android:name=".UI.ReportPage"
+            android:exported="false"
+            android:label="Search"
+            android:parentActivityName=".UI.BookList"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

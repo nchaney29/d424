@@ -7,4 +7,7 @@
         android:id="@+id/sample"/>
     <item android:title="Item"
         android:id="@+id/item"/>-->
+<item android:title="Generate Report"
+    android:id="@+id/report"/>
+
 </menu>
