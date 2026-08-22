@@ -16,6 +16,8 @@ import com.example.d424booktracker.entities.ReportItem;
 import com.example.d424booktracker.entities.User;
 
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +37,8 @@ public class Repository {
 
     private String username;
     private String password;
+    private String hashedPW;
+    private String hash;
     private boolean result;
     int userId;
     private List<CombineSearch> results;
@@ -196,6 +200,11 @@ public class Repository {
 
     }
 
+    public String hashPassword(String password) {
+        hashedPW = BCrypt.hashpw(password, BCrypt.gensalt());
+        return hashedPW;
+    }
+
     public void registerUser(User user) {
         databaseExecutor.execute(() -> {
             try {
@@ -212,9 +221,9 @@ public class Repository {
 
     }
 
-    public int loginUser(String username, String password) {
+    public int loginUser(String username) {
         databaseExecutor.execute(() -> {
-            userId = (mUserDAO.userLogin(username, password)).getUserId();
+            userId = (mUserDAO.userLogin(username));
         });
 
         try {
@@ -240,16 +249,19 @@ public class Repository {
         return result;
     }
 
-    public boolean validatePassword(String password) {
-        databaseExecutor.execute(() -> {
-            User currentUser = mUserDAO.findPassword(password);
-            result = currentUser != null;
-        });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public String returnHash(String username) {
+        databaseExecutor.execute(() ->
+                hash = mUserDAO.findPassword(username));
+
+        return hash;
+    }
+
+    public boolean validatePassword(String password, String hashedPassword) {
+            if (hashedPassword != null) {
+                result = BCrypt.checkpw(password, hashedPassword);
+            } else {
+                result = false;
+            }
 
         return result;
     }

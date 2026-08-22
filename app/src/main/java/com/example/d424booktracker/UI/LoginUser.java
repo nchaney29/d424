@@ -20,6 +20,7 @@ public class LoginUser extends AppCompatActivity {
     Repository repository;
     User currentUser;
     int userId = -1;
+    String hashedPW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +41,15 @@ public class LoginUser extends AppCompatActivity {
                 Toast.makeText(this, "Both fields are required", Toast.LENGTH_LONG).show();
             }
 
+            hashedPW = repository.returnHash(username);
 
-            if ((repository.validateName(username)) && (repository.validatePassword(password)))  {
-                userId = (repository.loginUser(username, password));
+            if ((repository.validateName(username)) && (repository.validatePassword(password, hashedPW)))  {
+                userId = (repository.loginUser(username));
                 currentUser = new User (userId, username, password);
 
                 SessionManager sessionManager = new SessionManager(LoginUser.this);
-                sessionManager.createSession(repository.loginUser(username, password));
-                System.out.println("UserID: " + userId);
+                sessionManager.createSession(userId);
+//                System.out.println("UserID: " + userId);
 
                 Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show();
 

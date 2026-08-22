@@ -2,6 +2,7 @@ package com.example.d424booktracker.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.d424booktracker.entities.Audiobook;
@@ -15,13 +16,13 @@ import java.util.List;
 
 @Dao
 public interface UserDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     long registerUser(User user) throws SQLException;
 
 
     //login
-    @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
-    User userLogin(String username, String password);
+    @Query("SELECT userId FROM users WHERE username = :username LIMIT 1")
+    int userLogin(String username);
 
     @Query("SELECT * FROM users")
     List<User> getAllUsers();
@@ -30,8 +31,8 @@ public interface UserDAO {
     @Query("SELECT * FROM users WHERE username = :username LIMIT 1 ")
     User findUsername(String username);
 
-    @Query("SELECT * FROM users WHERE password = :password LIMIT 1")
-    User findPassword(String password);
+    @Query("SELECT password FROM users WHERE username = :username LIMIT 1")
+    String findPassword(String username);
 
     //search implementation
     @Query("SELECT bookName AS title, author AS author, bookID AS bookID, 'book' AS bookType FROM books WHERE title LIKE :searchQuery AND userId = :currentUserId " + "UNION " + "SELECT bookName AS title, author AS author, bookID AS bookID, 'audiobook' as bookType FROM audiobooks WHERE title LIKE :searchQuery AND userId = :currentUserId")

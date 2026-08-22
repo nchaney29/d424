@@ -5,6 +5,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.d424booktracker.R;
@@ -42,7 +44,9 @@ public class RegisterUser extends AppCompatActivity {
             else
                 userID = repository.getmAllUsers().get(repository.getmAllUsers().size() - 1).getUserId() + 1;
 
-            currentUser = new User (userID, username, password);
+            String hashedPassword = repository.hashPassword(password);
+
+            currentUser = new User (userID, username, hashedPassword);
 
             try {
                 repository.registerUser(currentUser);
