@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +33,7 @@ public class BookList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_book_list);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -80,16 +81,24 @@ public class BookList extends AppCompatActivity {
         bookAdapter.setBooks(allBooks);
         audiobookAdapter.setAudiobooks(allAudiobooks);
 
-        //fix back button
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+//        //back button
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        }
 
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_book_list, menu);
+
+        //hides back button (force use of logout button to return to login screen)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+        }
+
         return true;
     }
 
@@ -115,23 +124,24 @@ public class BookList extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        //adds sample data for testing
-        /*if(item.getItemId()==R.id.sample){
-            repository=new Repository(getApplication());
-            //Toast.makeText(VacationList.this, "put in sample data", Toast.LENGTH_LONG).show();
-            Vacations vacations=new Vacations(0, "Vacation", "07/01/2027","07/12/2027", "Hotel");
-            repository.insert(vacations);
-            Excursion excursion=new Excursion(0, "Excursioning", "07/02/2027", 1);
-            repository.insert(excursion);
-            return true;
-        }*/
-        if(item.getItemId()==android.R.id.home){
-            getOnBackPressedDispatcher().onBackPressed();
-            return true;
-        }
+
+        //fixes back button functionality
+//        if(item.getItemId()==android.R.id.home){
+//            getOnBackPressedDispatcher().onBackPressed();
+//            return true;
+//        }
+
         if(item.getItemId()==R.id.report){
             Intent intent = new Intent(BookList.this, ReportPage.class);
             startActivity(intent);
+            return true;
+        }
+        if(item.getItemId()==R.id.logout){
+            SessionManager sessionManager = new SessionManager(BookList.this);
+            sessionManager.logout();
+            Intent intent = new Intent(BookList.this, MainActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
             return true;
         }
 

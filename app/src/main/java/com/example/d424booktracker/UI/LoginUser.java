@@ -33,31 +33,43 @@ public class LoginUser extends AppCompatActivity {
 
         repository = new Repository(getApplication());
 
-        loginBtn.setOnClickListener(v-> {
+        loginBtn.setOnClickListener(v -> {
             String username = un.getText().toString().trim();
             String password = pw.getText().toString().trim();
 
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Both fields are required", Toast.LENGTH_LONG).show();
+                return;
             }
 
-            hashedPW = repository.returnHash(username);
+            java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                hashedPW = repository.returnHash(username);
 
-            if ((repository.validateName(username)) && (repository.validatePassword(password, hashedPW)))  {
-                userId = (repository.loginUser(username));
-                currentUser = new User (userId, username, password);
+                boolean validUN = repository.validateName(username);
+                boolean validPW = repository.validatePassword(password, hashedPW);
 
-                SessionManager sessionManager = new SessionManager(LoginUser.this);
-                sessionManager.createSession(userId);
-//                System.out.println("UserID: " + userId);
 
-                Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show();
+                if (validUN && validPW) {
+                    userId = (repository.loginUser(username));
 
-                startActivity(new Intent(LoginUser.this, BookList.class));
-                finish();
-            } else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
-            }
+                    runOnUiThread(() -> {
+                        currentUser = new User(userId, username, password);
+
+                        SessionManager sessionManager = new SessionManager(LoginUser.this);
+                        sessionManager.createSession(userId);
+                        System.out.println("UserID: " + userId);
+
+                        Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show();
+
+                        startActivity(new Intent(LoginUser.this, BookList.class));
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
+                    });
+                }
+            });
         });
     }
 }

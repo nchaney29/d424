@@ -63,7 +63,7 @@
         <activity
             android:name=".UI.ReportPage"
             android:exported="false"
-            android:label="Search"
+            android:label="Report"
             android:parentActivityName=".UI.BookList"
             android:windowSoftInputMode="adjustResize" />
     </application>

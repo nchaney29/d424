@@ -213,55 +213,34 @@ public class Repository {
                 throw new RuntimeException(e);
             }
         });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
 
     public int loginUser(String username) {
-        databaseExecutor.execute(() -> {
-            userId = (mUserDAO.userLogin(username));
-        });
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        userId = (mUserDAO.userLogin(username));
 
         return userId;
     }
 
     public boolean validateName(String username) {
-        databaseExecutor.execute(() -> {
-            User currentUser = mUserDAO.findUsername(username);
-            result = currentUser != null;
-        });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        User currentUser = mUserDAO.findUsername(username);
+        result = currentUser != null;
 
         return result;
     }
 
     public String returnHash(String username) {
-        databaseExecutor.execute(() ->
-                hash = mUserDAO.findPassword(username));
+        hash = mUserDAO.findPassword(username);
 
         return hash;
     }
 
     public boolean validatePassword(String password, String hashedPassword) {
-            if (hashedPassword != null) {
-                result = BCrypt.checkpw(password, hashedPassword);
-            } else {
-                result = false;
-            }
+        if (hashedPassword != null) {
+            result = BCrypt.checkpw(password, hashedPassword);
+        } else {
+            result = false;
+        }
 
         return result;
     }
@@ -283,43 +262,19 @@ public class Repository {
     }
 
     public Book findBook(String title, int bookID, int userID) {
-        databaseExecutor.execute(() -> {
-            foundBook = mUserDAO.bookLookup(title, bookID, userID);
-        });
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        foundBook = mUserDAO.bookLookup(title, bookID, userID);
 
         return foundBook;
     }
 
     public Audiobook findAudiobook(String title, int bookID, int userID) {
-        databaseExecutor.execute(() -> {
-            foundAudiobook = mUserDAO.audiobookLookup(title, bookID, userID);
-        });
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        foundAudiobook = mUserDAO.audiobookLookup(title, bookID, userID);
 
         return foundAudiobook;
     }
 
     public List<ReportItem> generateReport(int userID) {
-        databaseExecutor.execute(() -> {
-            reportList = mUserDAO.reportGenerate(userID);
-        });
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        reportList = mUserDAO.reportGenerate(userID);
 
         return reportList;
     }

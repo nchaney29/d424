@@ -209,50 +209,6 @@ public class BookDetails extends AppCompatActivity {
             }
         }
 
-//sets start date notification
-//        if (item.getItemId() == R.id.vacationnotify) {
-//            String dateFromScreen = editStartDate.getText().toString();
-//
-//            Date myDate = null;
-//            try {
-//                myDate = sdf.parse(dateFromScreen);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                Long trigger = myDate.getTime();
-//                Intent intent = new Intent(BookDetails.this, MyReceiver.class);
-//                intent.putExtra("key", editName.getText().toString() + " is starting");
-//                PendingIntent sender = PendingIntent.getBroadcast(BookDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
-//            } catch (Exception e) {
-//
-//            }
-//        }
-//
-//        //sets end date notification
-//        if (item.getItemId() == R.id.vacationendnotify) {
-//            String dateFromScreen = editEndDate.getText().toString();
-//
-//            Date myDate = null;
-//            try {
-//                myDate = sdf.parse(dateFromScreen);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                Long trigger = myDate.getTime();
-//                Intent intent = new Intent(BookDetails.this, MyReceiver.class);
-//                intent.putExtra("key", editName.getText().toString() + " is ending");
-//                PendingIntent sender = PendingIntent.getBroadcast(BookDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
-//            } catch (Exception e) {
-//
-//            }
-//        }
-
         return true;
     }
 }

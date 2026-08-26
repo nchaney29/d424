@@ -44,24 +44,37 @@ public class SearchPage extends AppCompatActivity {
 
 
         final SearchAdapter searchAdapter = new SearchAdapter(this, (CombineSearch currentItem) -> {
-            Intent intent=new Intent(SearchPage.this, BookDetails.class);
+            Intent intent = new Intent(SearchPage.this, BookDetails.class);
             intent.putExtra("id", currentItem.getBookID());
             intent.putExtra("name", currentItem.getTitle());
             intent.putExtra("author", currentItem.getAuthor());
 
             if (Objects.equals(currentItem.getBookType(), "book")) {
-                current = repository.findBook(currentItem.getTitle(), currentItem.getBookID(), currentUserID);
-                intent.putExtra("startdate", current.getStartDate());
-                intent.putExtra("enddate", current.getEndDate());
-            } else {
-                currentAudiobook = repository.findAudiobook(currentItem.getTitle(), currentItem.getBookID(), currentUserID);
-                intent.putExtra("startdate", currentAudiobook.getStartDate());
-                intent.putExtra("enddate", currentAudiobook.getEndDate());
-                intent.putExtra("listeningspeed", currentAudiobook.getListeningSpeed());
-            }
+                java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                    current = repository.findBook(currentItem.getTitle(), currentItem.getBookID(), currentUserID);
 
-            startActivity(intent);
+                    runOnUiThread(() -> {
+                        intent.putExtra("startdate", current.getStartDate());
+                        intent.putExtra("enddate", current.getEndDate());
+
+                        startActivity(intent);
+                    });
+                });
+            } else {
+                java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+                    currentAudiobook = repository.findAudiobook(currentItem.getTitle(), currentItem.getBookID(), currentUserID);
+
+                    runOnUiThread(() -> {
+                        intent.putExtra("startdate", currentAudiobook.getStartDate());
+                        intent.putExtra("enddate", currentAudiobook.getEndDate());
+                        intent.putExtra("listeningspeed", currentAudiobook.getListeningSpeed());
+
+                        startActivity(intent);
+                    });
+                });
+            }
         });
+
 
         recyclerView.setAdapter(searchAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -79,5 +92,6 @@ public class SearchPage extends AppCompatActivity {
                 searchAdapter.setResults(allBooks);
             });
         });
+
     }
 }
