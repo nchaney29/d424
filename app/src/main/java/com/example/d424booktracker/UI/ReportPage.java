@@ -33,20 +33,25 @@ public class ReportPage extends AppCompatActivity {
 
         SessionManager sessionManager = new SessionManager(ReportPage.this);
 
-        RecyclerView recyclerView=findViewById(R.id.report_view);
+        RecyclerView recyclerView = findViewById(R.id.report_view);
 
         repository = new Repository(getApplication());
 
         currentUserID = sessionManager.getCurrentId();
 
-        List<ReportItem> allBooks = repository.generateReport(currentUserID);
 
         final ReportAdapter reportAdapter = new ReportAdapter(this);
 
         recyclerView.setAdapter(reportAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        reportAdapter.setReport(allBooks);
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
+            List<ReportItem> allBooks = repository.generateReport(currentUserID);
+
+            runOnUiThread(() -> {
+                reportAdapter.setReport(allBooks);
+            });
+        });
 
         //fix back button
         if (getSupportActionBar() != null) {

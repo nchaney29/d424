@@ -205,14 +205,8 @@ public class Repository {
         return hashedPW;
     }
 
-    public void registerUser(User user) {
-        databaseExecutor.execute(() -> {
-            try {
-                mUserDAO.registerUser(user);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public void registerUser(User user) throws SQLException {
+        mUserDAO.registerUser(user);
 
     }
 
