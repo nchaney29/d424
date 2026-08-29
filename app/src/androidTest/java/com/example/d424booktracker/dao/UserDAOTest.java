@@ -18,7 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class UserDAOTest extends TestCase {
     }
 
     @After
-    public void closeDB() throws IOException {
+    public void closeDB() {
         db.close();
     }
 

@@ -86,12 +86,15 @@ public class SearchPage extends AppCompatActivity {
         searchBtn.setOnClickListener(v -> {
             String query = searchBar.getText().toString();
 
-            List<CombineSearch> allBooks = repository.searchDatabase(query, currentUserID);
+            java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
 
-            runOnUiThread(() -> {
-                searchAdapter.setResults(allBooks);
+                List<CombineSearch> allBooks = repository.searchDatabase(query, currentUserID);
+
+                runOnUiThread(() -> {
+                    searchAdapter.setResults(allBooks);
+                });
             });
-        });
 
+        });
     }
 }

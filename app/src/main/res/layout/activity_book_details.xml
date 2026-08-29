@@ -142,7 +142,7 @@
                 android:id="@+id/listeningspeed"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:hint="mm/dd/yyyy" />
+                android:hint="1.0" />
 
         </LinearLayout>
         </LinearLayout>

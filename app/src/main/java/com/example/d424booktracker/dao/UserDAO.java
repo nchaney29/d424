@@ -35,7 +35,7 @@ public interface UserDAO {
     String findPassword(String username);
 
     //search implementation
-    @Query("SELECT bookName AS title, author AS author, bookID AS bookID, 'book' AS bookType FROM books WHERE title OR author LIKE :searchQuery AND userId = :currentUserId " + "UNION " + "SELECT bookName AS title, author AS author, bookID AS bookID, 'audiobook' as bookType FROM audiobooks WHERE title OR author LIKE :searchQuery AND userId = :currentUserId")
+    @Query("SELECT bookName AS title, author AS author, bookID AS bookID, 'book' AS bookType FROM books WHERE (bookName LIKE :searchQuery OR author LIKE :searchQuery) AND userId = :currentUserId " + "UNION " + "SELECT bookName AS title, author AS author, bookID AS bookID, 'audiobook' as bookType FROM audiobooks WHERE (bookName LIKE :searchQuery OR author LIKE :searchQuery) AND userId = :currentUserId")
     List<CombineSearch> searchBooks(String searchQuery, int currentUserId);
 
     @Query("SELECT * FROM books WHERE bookName = :title AND bookID = :bookID AND userId = :currentUserId")

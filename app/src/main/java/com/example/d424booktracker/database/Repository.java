@@ -242,15 +242,7 @@ public class Repository {
     public List<CombineSearch> searchDatabase(String query, int userID) {
         String searchQuery = "%" + query + "%";
 
-        databaseExecutor.execute(() -> {
-            results = mUserDAO.searchBooks(searchQuery, userID);
-        });
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        results = mUserDAO.searchBooks(searchQuery, userID);
 
         return results;
     }
