@@ -13,7 +13,7 @@ import com.example.d424booktracker.entities.Audiobook;
 import com.example.d424booktracker.entities.Book;
 import com.example.d424booktracker.entities.User;
 
-@Database(entities = {Book.class, Audiobook.class, User.class}, version = 11, exportSchema = false)
+@Database(entities = {Book.class, Audiobook.class, User.class}, version = 12, exportSchema = false)
 public abstract class BookDatabaseBuilder extends RoomDatabase {
     public abstract BookDAO bookDAO();
     public abstract AudiobookDAO audiobookDAO();
